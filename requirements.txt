@@ -1,0 +1,27 @@
+# ==========================
+# Requisitos do projeto DengueSimu_Mesa
+# ==========================
+
+# --- Framework de simulação ABM ---
+mesa==3.3.1
+networkx>=3.2.1
+
+# --- Interface web interativa ---
+solara==1.54.0
+
+# --- Manipulação e coleta de dados ---
+pandas>=2.2.3
+numpy>=1.26.4
+tqdm>=4.66.4
+matplotlib>=3.9.2
+
+# --- Requisições e APIs ---
+requests>=2.32.3
+
+# --- Servidor backend (usado internamente pelo Solara) ---
+starlette>=0.37.2
+uvicorn>=0.30.6
+
+# --- Compatibilidade ---
+typing_extensions>=4.12.2
+
