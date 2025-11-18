@@ -1,0 +1,226 @@
+/* src/Database.css */
+.database {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.database-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.database-header h2 {
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+}
+
+.database-header p {
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.db-stats {
+  margin-bottom: 2rem;
+}
+
+.db-stats h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  border-left: 4px solid #3498db;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.db-actions {
+  margin-bottom: 2rem;
+}
+
+.db-actions h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background: #3498db;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 150px;
+}
+
+.action-btn:hover:not(:disabled) {
+  background: #2980b9;
+  transform: translateY(-2px);
+}
+
+.action-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.action-btn.backing_up {
+  background: #f39c12;
+}
+
+.action-btn.completed {
+  background: #27ae60;
+}
+
+.db-operations {
+  margin-bottom: 2rem;
+}
+
+.db-operations h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.operations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.operation-item {
+  display: grid;
+  grid-template-columns: 80px 1fr 150px 50px;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.operation-item:hover {
+  background: #ecf0f1;
+  transform: translateX(5px);
+}
+
+.operation-item.success {
+  border-left: 4px solid #27ae60;
+}
+
+.operation-item.running {
+  border-left: 4px solid #f39c12;
+}
+
+.op-type {
+  font-weight: bold;
+  color: #2c3e50;
+  background: #ecf0f1;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.op-table {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.op-timestamp {
+  color: #95a5a6;
+  font-size: 0.8rem;
+}
+
+.op-status {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.db-schema h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.schema-tables {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.table-card {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+}
+
+.table-card h4 {
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+}
+
+.table-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field {
+  padding: 0.5rem;
+  background: white;
+  border-radius: 5px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #2c3e50;
+  border-left: 3px solid #3498db;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .operation-item {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .schema-tables {
+    grid-template-columns: 1fr;
+  }
+}
