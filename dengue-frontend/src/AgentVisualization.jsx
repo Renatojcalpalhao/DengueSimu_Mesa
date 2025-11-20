@@ -184,7 +184,7 @@ const AgentVisualization = ({ simulationData, isRunning }) => {
         if (agent.status === 'healthy') {
           ctx.fillStyle = '#3498db'; // Azul para mosquito saudável
         } else {
-          ctx.fillStyle = '#e74c3c'; // Vermelho para mosquito infectado
+          ctx.fillStyle = '#ff9800'; // LARANJA para mosquito infectado (atualizado)
         }
         // Desenhar mosquito como um ponto alongado
         ctx.ellipse(agent.x, agent.y, agent.size, agent.size * 0.5, Math.atan2(agent.dy, agent.dx), 0, Math.PI * 2);
@@ -196,7 +196,11 @@ const AgentVisualization = ({ simulationData, isRunning }) => {
       if (agent.status === 'infected') {
         ctx.beginPath();
         ctx.arc(agent.x, agent.y, agent.size + 2, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(231, 76, 60, 0.3)';
+        if (agent.type === 'human') {
+          ctx.strokeStyle = 'rgba(231, 76, 60, 0.3)';
+        } else {
+          ctx.strokeStyle = 'rgba(255, 152, 0, 0.3)';
+        }
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -258,21 +262,23 @@ const AgentVisualization = ({ simulationData, isRunning }) => {
         
         <div className="legend">
           <h4>Legenda:</h4>
-          <div className="legend-item">
-            <div className="color-box healthy-human"></div>
-            <span>Humano Saudável</span>
-          </div>
-          <div className="legend-item">
-            <div className="color-box infected-human"></div>
-            <span>Humano Infectado</span>
-          </div>
-          <div className="legend-item">
-            <div className="color-box healthy-mosquito"></div>
-            <span>Mosquito Saudável</span>
-          </div>
-          <div className="legend-item">
-            <div className="color-box infected-mosquito"></div>
-            <span>Mosquito Infectado</span>
+          <div className="legend-items">
+            <div className="legend-item">
+              <div className="color-box healthy-human"></div>
+              <span>Humano Saudável</span>
+            </div>
+            <div className="legend-item">
+              <div className="color-box infected-human"></div>
+              <span>Humano Infectado</span>
+            </div>
+            <div className="legend-item">
+              <div className="color-box healthy-mosquito"></div>
+              <span>Mosquito Saudável</span>
+            </div>
+            <div className="legend-item">
+              <div className="color-box infected-mosquito"></div>
+              <span>Mosquito Infectado</span>
+            </div>
           </div>
           <div className="legend-info">
             <p>💡 Clique no mapa para adicionar agentes infectados</p>
@@ -294,9 +300,15 @@ const AgentVisualization = ({ simulationData, isRunning }) => {
           </span>
         </div>
         <div className="stat-item">
-          <span className="stat-label">Mosquitos:</span>
+          <span className="stat-label">Mosquitos Saudáveis:</span>
           <span className="stat-value">
-            {agents.filter(a => a.type === 'mosquito').length}
+            {agents.filter(a => a.type === 'mosquito' && a.status === 'healthy').length}
+          </span>
+        </div>
+        <div className="stat-item">
+          <span className="stat-label">Mosquitos Infectados:</span>
+          <span className="stat-value infected">
+            {agents.filter(a => a.type === 'mosquito' && a.status === 'infected').length}
           </span>
         </div>
         <div className="stat-item">
