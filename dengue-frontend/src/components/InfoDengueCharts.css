@@ -1,0 +1,492 @@
+/* dengue-frontend/src/components/InfoDengue/InfoDengueCharts.css */
+
+/* Estilos Gerais para Componentes InfoDengue */
+.info-dengue-chart,
+.painel-metricas,
+.demografia-chart {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border: 1px solid #e1e8ed;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.chart-title h3 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+  font-size: 1.2rem;
+}
+
+.chart-title p {
+  margin: 0;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.chart-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.disease-selector,
+.time-selector,
+.filter-selector {
+  padding: 8px 12px;
+  border: 1px solid #bdc3c7;
+  border-radius: 6px;
+  background: white;
+  color: #2c3e50;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Estilos para CasosPorSemanaChart */
+.chart-container {
+  margin: 20px 0;
+}
+
+.cases-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  height: 300px;
+  padding: 20px 0;
+}
+
+.chart-y-axis {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  height: 100%;
+  padding-right: 10px;
+  border-right: 1px solid #ecf0f1;
+}
+
+.y-label {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  margin-bottom: 10px;
+  transform: rotate(-90deg);
+  white-space: nowrap;
+}
+
+.y-scale {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  font-size: 0.7rem;
+  color: #95a5a6;
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex: 1;
+  height: 100%;
+}
+
+.bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+}
+
+.case-bar {
+  width: 100%;
+  min-width: 20px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s ease;
+  position: relative;
+  background: linear-gradient(to top, rgba(0,0,0,0.1), transparent);
+}
+
+.case-bar:hover {
+  transform: scaleY(1.05);
+  opacity: 0.9;
+}
+
+.bar-value {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #2c3e50;
+  background: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  white-space: nowrap;
+}
+
+.week-label {
+  font-size: 0.7rem;
+  color: #7f8c8d;
+  margin-top: 5px;
+  text-align: center;
+  height: 30px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.chart-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid #ecf0f1;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.current-stats {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+
+.stat-value {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 15px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+/* Estilos para PainelMetricas */
+.metricas-header {
+  margin-bottom: 20px;
+}
+
+.metricas-header h3 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+  font-size: 1.2rem;
+}
+
+.metricas-header p {
+  margin: 0;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.metricas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.metrica-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  border-left: 4px solid #3498db;
+  transition: transform 0.2s ease;
+}
+
+.metrica-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.metrica-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.metrica-icon {
+  font-size: 1.5rem;
+}
+
+.metrica-status {
+  font-size: 1.2rem;
+}
+
+.metrica-content {
+  margin-bottom: 10px;
+}
+
+.metrica-valor {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.metrica-titulo {
+  font-size: 0.9rem;
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.metrica-descricao {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+
+.metrica-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+.metrica-variacao.positiva {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.metrica-variacao.negativa {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.metrica-variacao.neutra {
+  color: #7f8c8d;
+}
+
+.metrica-periodo {
+  color: #95a5a6;
+}
+
+.metricas-legenda {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding-top: 15px;
+  border-top: 1px solid #ecf0f1;
+}
+
+.legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+
+.legenda-indicador {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* Estilos para Demografia */
+.demografia-content {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 30px;
+  margin: 20px 0;
+}
+
+.bars-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.bar-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.bar-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 150px;
+  font-size: 0.85rem;
+}
+
+.label-text {
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.label-value {
+  color: #7f8c8d;
+  font-size: 0.8rem;
+}
+
+.bar-track {
+  flex: 1;
+  height: 30px;
+  background: #ecf0f1;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 15px;
+  min-width: 60px;
+  transition: width 0.5s ease;
+}
+
+.bar-percent {
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.demografia-summary {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.demografia-summary h4 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.summary-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.summary-label {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+
+.summary-value {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.observacoes h5 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.observacoes ul {
+  margin: 0;
+  padding-left: 15px;
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  line-height: 1.4;
+}
+
+.observacoes li {
+  margin-bottom: 5px;
+}
+
+.data-source {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #95a5a6;
+  padding-top: 15px;
+  border-top: 1px solid #ecf0f1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .chart-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .chart-controls {
+    justify-content: flex-start;
+  }
+  
+  .cases-chart {
+    height: 250px;
+    gap: 10px;
+  }
+  
+  .chart-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .current-stats {
+    justify-content: space-between;
+  }
+  
+  .metricas-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .demografia-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .bar-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .bar-label {
+    width: 100%;
+  }
+}

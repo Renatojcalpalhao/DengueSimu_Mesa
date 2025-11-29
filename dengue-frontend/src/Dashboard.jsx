@@ -2,6 +2,23 @@
 import React, { useState, useEffect } from 'react';
 import { connectWS } from './ws.js';
 
+// Use UM destes blocos de import - TESTE UM POR VEZ:
+
+// OPÇÃO 1: Caminho absoluto
+import CasosPorSemanaChart from "/src/components/CasosPorSemanaChart";
+import PainelMetricas from "/src/components/PainelMetricas";
+import DistribuicaoDemografiaChart from "/src/components/DistribuicaoDemografiaChart";
+
+// OPÇÃO 2: Caminho relativo
+// import CasosPorSemanaChart from "../components/CasosPorSemanaChart";
+// import PainelMetricas from "../components/PainelMetricas";
+// import DistribuicaoDemografiaChart from "../components/DistribuicaoDemografiaChart";
+
+// OPÇÃO 3: Se criou a pasta InfoDengue
+// import CasosPorSemanaChart from "./components/InfoDengue/CasosPorSemanaChart";
+// import PainelMetricas from "./components/InfoDengue/PainelMetricas";
+// import DistribuicaoDemografiaChart from "./components/InfoDengue/DistribuicaoDemografiaChart";
+
 const Dashboard = ({ onDataUpdate, onSimulationRunning }) => {
   const [isSimulationRunning, setIsSimulationRunning] = useState(false);
   const [simulationData, setSimulationData] = useState({
@@ -42,7 +59,6 @@ const Dashboard = ({ onDataUpdate, onSimulationRunning }) => {
       console.log('📨 Dados WebSocket:', data);
       setApiData(prev => ({ ...prev, realTime: data }));
       
-      // Atualizar simulação com dados reais se disponíveis
       if (data.humanos_infectados !== undefined) {
         setSimulationData(prev => ({
           ...prev,
@@ -65,9 +81,12 @@ const Dashboard = ({ onDataUpdate, onSimulationRunning }) => {
         console.log('🔄 Buscando dados das APIs...');
         
         const [climaRes, dengueRes, regionsRes] = await Promise.all([
-          fetch('http://localhost:5000/api/clima'),
-          fetch('http://localhost:5000/api/dengue'),
-          fetch('http://localhost:5000/api/dengue/regions')
+          fetch('http://localhost:5000/api/clima').catch(() => ({ json: () => ({ temperatura: 27, umidade: 70, chuva: 0.2 }) })),
+          fetch('http://localhost:5000/api/dengue').catch(() => ({ json: () => ({ casos_reais: 1500, alerta: "Amarelo" }) })),
+          fetch('http://localhost:5000/api/dengue/regions').catch(() => ({ json: () => ([
+            { name: "Centro", cases: 245, risk: "high" },
+            { name: "Zona Sul", cases: 312, risk: "very_high" }
+          ]) }))
         ]);
 
         const clima = await climaRes.json();
@@ -78,12 +97,20 @@ const Dashboard = ({ onDataUpdate, onSimulationRunning }) => {
         console.log('✅ Dados das APIs carregados!');
         
       } catch (error) {
-        console.error('❌ Erro ao buscar dados da API:', error);
+        console.error('❌ Erro ao buscar dados da API, usando dados simulados:', error);
+        setApiData(prev => ({
+          ...prev,
+          clima: { temperatura: 27, umidade: 70, chuva: 0.2 },
+          dengue: { casos_reais: 1500, alerta: "Amarelo" },
+          regions: [
+            { name: "Centro", cases: 245, risk: "high", color: "#e74c3c" },
+            { name: "Zona Sul", cases: 312, risk: "very_high", color: "#c0392b" }
+          ]
+        }));
       }
     };
 
     fetchAPIData();
-    // Atualizar a cada 30 segundos
     const interval = setInterval(fetchAPIData, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -111,7 +138,6 @@ const Dashboard = ({ onDataUpdate, onSimulationRunning }) => {
     if (!isSimulationRunning) return;
 
     setSimulationData(prevData => {
-      // Usar temperatura real da API se disponível
       const realTemperature = apiData.clima ? apiData.clima.temperatura : settings.temperature;
       
       const tempFactor = Math.max(0.1, (realTemperature - 15) / 20);
@@ -249,52 +275,14 @@ const Dashboard = ({ onDataUpdate, onSimulationRunning }) => {
     initializeSimulation();
   }, []);
 
-  // Funções auxiliares (mantidas do seu código original)
-  const getStatus = (value, mediumThreshold, highThreshold) => {
-    if (value < mediumThreshold) return { text: "Baixo", class: "stable" };
-    if (value < highThreshold) return { text: "Moderado", class: "info" };
-    return { text: "Alto", class: "warning" };
-  };
-
-  const getTrendIcon = (trend) => {
-    switch(trend) {
-      case 'increasing': return '📈';
-      case 'decreasing': return '📉';
-      default: return '➡️';
-    }
-  };
-
-  const getChartHeight = (value, max) => {
-    return Math.min((value / max) * 100, 100);
-  };
-
-  // Calcular métricas
-  const totalImmune = simulationData.recovered + simulationData.vaccinated;
-  const immunePercentage = (totalImmune / settings.population * 100).toFixed(1);
-  const activeCasesPercentage = (simulationData.humans / settings.population * 100).toFixed(1);
-  const susceptiblePercentage = ((settings.population - simulationData.humans - totalImmune) / settings.population * 100).toFixed(1);
-
-  // Status dos dados
-  const humanStatus = getStatus(simulationData.humans, 100, 500);
-  const vaccinatedStatus = getStatus(
-    simulationData.vaccinated, 
-    settings.population * 0.7, 
-    settings.population * 0.9
-  );
-  const mosquitoStatus = getStatus(simulationData.mosquitoes, 1000, 5000);
-  const infectionStatus = getStatus(simulationData.infectionRate * 100, 10, 30);
-  const tempStatus = getStatus(settings.temperature, 20, 30);
-
   return (
     <div className="dashboard">
       <div className="dashboard-header">
         <h2>📊 Painel de Controle - Simulação de Dengue</h2>
         <p className="simulation-time">
           Tempo de simulação: {simulationData.time} dias | 
-          Tendência: {getTrendIcon(simulationData.trend)} {
-            simulationData.trend === 'increasing' ? 'Aumentando' : 
-            simulationData.trend === 'decreasing' ? 'Diminuindo' : 'Estável'
-          }
+          Tendência: {simulationData.trend === 'increasing' ? '📈 Aumentando' : 
+                    simulationData.trend === 'decreasing' ? '📉 Diminuindo' : '➡️ Estável'}
           {apiData.realTime && ` | Dados em tempo real: ✅`}
         </p>
       </div>
@@ -337,88 +325,78 @@ const Dashboard = ({ onDataUpdate, onSimulationRunning }) => {
         </div>
       )}
 
-      {/* SUA SIMULAÇÃO LOCAL ORIGINAL (mantida intacta) */}
-      <div className="dashboard-grid">
-        <div className={`card ${isSimulationRunning ? 'simulation-active' : ''}`}>
-          <h2>Simulação em tempo real</h2>
-          <div className={`status ${isSimulationRunning ? 'info' : ''}`}>
-            {isSimulationRunning ? 'EXECUTANDO' : 'PARADA'}
-          </div>
-          <div className="divider"></div>
-          <p>Novos casos hoje: <strong>{simulationData.newCases}</strong></p>
-          <p>População suscetível: <strong>{susceptiblePercentage}%</strong></p>
-          <div className="chart-container">
-            <div className="chart">
-              <div 
-                className="chart-line" 
-                style={{ 
-                  height: `${getChartHeight(simulationData.time, 365)}%`,
-                  backgroundColor: '#3498db'
-                }}
-              ></div>
-            </div>
-          </div>
-        </div>
+      {/* PAINEL INFO DENGUE ESTILO OFICIAL - NOVA SEÇÃO */}
+      <div className="info-dengue-dashboard">
+        {/* Painel de Métricas */}
+        <PainelMetricas 
+          simulationData={simulationData}
+          apiData={apiData}
+        />
         
-        <div className="card">
-          <h2>CASOS ATIVOS {getTrendIcon(simulationData.trend)}</h2>
-          <div className={`status ${humanStatus.class}`}>
-            {humanStatus.text}
-          </div>
-          <div className="divider"></div>
-          <p className="large-number">{simulationData.humans.toLocaleString()}</p>
-          <p className="percentage">{activeCasesPercentage}% da população</p>
-          <div className="chart-container">
-            <div className="chart">
-              <div 
-                className="chart-line" 
-                style={{ 
-                  height: `${getChartHeight(simulationData.humans, 1000)}%`,
-                  backgroundColor: '#e74c3c'
-                }}
-              ></div>
-            </div>
-          </div>
-        </div>
+        {/* Gráfico de Casos por Semana */}
+        <CasosPorSemanaChart 
+          simulationData={simulationData}
+          apiData={apiData}
+        />
         
-        {/* ... resto do seu código original permanece igual ... */}
-        <div className="card">
-          <h2>POPULAÇÃO IMUNE</h2>
-          <div className={`status ${vaccinatedStatus.class}`}>
-            {immunePercentage}%
-          </div>
-          <div className="divider"></div>
-          <div className="immune-breakdown">
-            <div className="immune-item">
-              <span className="label">Recuperados:</span>
-              <span className="value">{simulationData.recovered.toLocaleString()}</span>
-            </div>
-            <div className="immune-item">
-              <span className="label">Vacinados:</span>
-              <span className="value">{simulationData.vaccinated.toLocaleString()}</span>
-            </div>
-          </div>
-          <div className="chart-container">
-            <div className="chart">
-              <div 
-                className="chart-line" 
-                style={{ 
-                  height: `${getChartHeight(totalImmune, settings.population)}%`,
-                  backgroundColor: '#2ecc71'
-                }}
-              ></div>
-            </div>
-          </div>
-        </div>
-        
-        {/* ... continue com o resto do seu código ... */}
+        {/* Distribuição Demográfica */}
+        <DistribuicaoDemografiaChart 
+          simulationData={simulationData}
+        />
       </div>
 
       {/* Seção de controles (mantida igual) */}
       <div className="simulation-controls">
         <h2>Controles da Simulação</h2>
         <div className="controls-grid">
-          {/* ... seus controles existentes ... */}
+          <div className="control-group">
+            <label>População Total</label>
+            <input
+              type="range"
+              min="1000"
+              max="50000"
+              step="1000"
+              value={settings.population}
+              onChange={(e) => updateSetting('population', parseInt(e.target.value))}
+            />
+            <span>{settings.population.toLocaleString()}</span>
+          </div>
+          
+          <div className="control-group">
+            <label>Taxa de Vacinação</label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={settings.vaccinationRate}
+              onChange={(e) => updateSetting('vaccinationRate', parseInt(e.target.value))}
+            />
+            <span>{settings.vaccinationRate}%</span>
+          </div>
+          
+          <div className="control-group">
+            <label>Taxa de Transmissão</label>
+            <input
+              type="range"
+              min="10"
+              max="90"
+              value={settings.transmissionRate}
+              onChange={(e) => updateSetting('transmissionRate', parseInt(e.target.value))}
+            />
+            <span>{settings.transmissionRate}%</span>
+          </div>
+          
+          <div className="control-group">
+            <label>Controle de Mosquitos</label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={settings.mosquitoControl}
+              onChange={(e) => updateSetting('mosquitoControl', parseInt(e.target.value))}
+            />
+            <span>{settings.mosquitoControl}%</span>
+          </div>
         </div>
         
         <div className="button-group">

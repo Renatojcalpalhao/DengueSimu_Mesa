@@ -1,9 +1,9 @@
 // src/App.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Dashboard from './Dashboard';
 import AgentVisualization from './AgentVisualization';
 import MapView from './MapView';
-import Analytics from './Analytics';
+import Analytics from './components/Analytics';
 import DataExport from './DataExport';
 import Database from './Database';
 import './App.css';
@@ -24,6 +24,7 @@ function App() {
 
   return (
     <div className="app">
+      {/* Header Fixo */}
       <header className="app-header">
         <div className="header-content">
           <h1>🚀 Sistema de Monitoramento - Dengue SP</h1>
@@ -31,6 +32,7 @@ function App() {
         </div>
       </header>
 
+      {/* Navegação Fixa - SEMPRE VISÍVEL */}
       <nav className="navigation">
         <div className="nav-tabs">
           {tabs.map(tab => (
@@ -40,12 +42,15 @@ function App() {
               onClick={() => setActiveTab(tab.id)}
             >
               <span className="tab-icon">{tab.icon}</span>
-              <span className="tab-name">{tab.name}</span>
+              <span className={`tab-name ${activeTab === tab.id ? 'mobile-visible' : ''}`}>
+                {tab.name}
+              </span>
             </button>
           ))}
         </div>
       </nav>
 
+      {/* Conteúdo Principal */}
       <main className="main-content">
         {activeTab === 'dashboard' && (
           <Dashboard 
@@ -73,6 +78,7 @@ function App() {
         )}
       </main>
 
+      {/* Footer */}
       <footer className="app-footer">
         <p>© 2024 Sistema de Monitoramento de Dengue - Secretaria de Saúde de SP</p>
       </footer>
